@@ -2,8 +2,8 @@
 //Αυτό το αρχείο θα το χρησιμοποιήσετε
 // για να υλοποιήσετε την άσκηση 1Α της OpenGL
 //
-//ΑΜ: 4359                    Όνομα: Dimosthenis Zagkas
-//ΑΜ:                         Όνομα: Aggelos Andreou
+//ΑΜ:4628                         Όνομα: Άγγελος Ανδρέου
+//ΑΜ:4359                         Όνομα: Δημοσθένης Ζάγκας 
 
 //*********************************
 
@@ -17,27 +17,18 @@
 #include <algorithm>
 #include <sstream>
 
-#include <windows.h>
-
-
 // Include GLEW
-#include <C:/GL/GLEWbin/include/GL/glew.h>
-
+#include <GL/glew.h>
 
 // Include GLFW
-#include <C:\GL\GLFWx64\include\GLFW\glfw3.h>
+#include <GLFW/glfw3.h>
 GLFWwindow* window;
 
 // Include GLM
-//#include <glm/glm.hpp>
-//#include <glm/gtc/matrix_transform.hpp>
-#include <C:\GL\GLM\glm\glm.hpp>
-#include<C:\GL\GLM\glm\gtc\matrix_transform.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 using namespace glm;
 using namespace std;
-
-GLuint square_number = 0;
-GLuint sleeping_time = 1000;
 
 //******************
 // Η LoadShaders είναι black box για σας
@@ -137,21 +128,6 @@ GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path)
 	return ProgramID;
 }
 
-//Callback signature
-//void function_name(GLFWwindow* window, int key, int scancode, int action, int mods)
-// https://www.glfw.org/docs/3.3/group__input.html
-
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-	if (action == GLFW_PRESS) {
-		if (key == GLFW_KEY_U) {
-			sleeping_time -= 250;
-		}
-		if (key == GLFW_KEY_D) {
-			sleeping_time += 250;
-		}
-	}
-}
-
 
 int main(void)
 {
@@ -170,10 +146,8 @@ int main(void)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Open a window and create its OpenGL context
-	// Save with UTF-8 encoding manually for greek title to appear, because... reasons.......
-	window = glfwCreateWindow(900, 900, "Πρώτη Άσκηση 2023", NULL, NULL);
-	//glfwSetWindowTitle(window, "Πρώτη Άσκηση 2023");
-	
+	window = glfwCreateWindow(900, 900, u8"Πρώτη άσκηση 2023", NULL, NULL);
+
 
 	if (window == NULL) {
 		fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
@@ -195,8 +169,8 @@ int main(void)
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-	// Dark blue background
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+	// Dark green background
+	glClearColor(0.0f, 0.0f, 0.6f, 0.0f);
 
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
@@ -204,13 +178,13 @@ int main(void)
 
 	//***********************************************
 	// Οι shaders σας είναι οι 
-	// ProjectVertexShader.vertexshader
-	// ProjectFragmentShader.fragmentshader
+    // ProjectVertexShader.vertexshader
+    // ProjectFragmentShader.fragmentshader
 
 	GLuint programID = LoadShaders("ProjectVertexShader.vertexshader", "ProjectFragmentShader.fragmentshader");
-
-	///////////////////////////////////////////////////////////////////////////////////////	
-		/**Το παρακάτω το αγνοείτε - είναι τοποθέτηση κάμερας ***/
+	
+///////////////////////////////////////////////////////////////////////////////////////	
+	/**Το παρακάτω το αγνοείτε - είναι τοποθέτηση κάμερας ***/
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
 	glm::mat4 Projection = glm::perspective(glm::radians(30.0f), 4.0f / 4.0f, 0.1f, 100.0f);
@@ -225,63 +199,64 @@ int main(void)
 	// Our ModelViewProjection : multiplication of our 3 matrices
 	glm::mat4 MVP = Projection * View * Model; // Remember, matrix multiplication is the other way around
 
-	///////////////////////////////////////////////////////////////////////////////////////
-		//**************************************************
-		/// Για βοήθεια το πρόγραμμα αναπαριστά ενα τυχαίο τρίγωνο - εσείς θα πρέπει να βάλετε κορυφές κατάλληλες 
-		//  για το δικό σας τρίγωνο.
-		//Στην άσκηση αυτή δουλεύετε στις 2 διαστάσεις x,y οπότε η z συνιστώσα θα ειναι πάντα 0.0f
-
+///////////////////////////////////////////////////////////////////////////////////////
+	//**************************************************
+	/// Για βοήθεια το πρόγραμμα αναπαριστά ενα τυχαίο τρίγωνο - εσείς θα πρέπει να βάλετε κορυφές κατάλληλες 
+	//  για το δικό σας τρίγωνο.
+	//Στην άσκηση αυτή δουλεύετε στις 2 διαστάσεις x,y οπότε η z συνιστώσα θα ειναι πάντα 0.0f
+	
 	static const GLfloat shape_1_buffer[] = {
-
+		
 	// First square
-	// First triangle
-	// Points: a=(1.5,1.5,0), b=(-1.5,-1.5,0), c=(1.5,-1.5,0)
-	// x-distance b to c is from -1.5 to 1.5 = 3, as per requirements
-	// y-distance a to b is from -1.5 to 1.5 = 3, as per requirements
+		// First triangle
+		// Points: a=(1.5,1.5,0), b=(-1.5,-1.5,0), c=(1.5,-1.5,0)
+		// x-distance b to c is from -1.5 to 1.5 = 3, as per requirements
+		// y-distance a to b is from -1.5 to 1.5 = 3, as per requirements
 		1.5f,1.5f,0.0f,
 		1.5f,-1.5f,0.0f,
 		-1.5f,-1.5f,0.0f,
-	// Second triangle
-	// Same as first triangle
+		// Second triangle
+		// Same as first triangle
 		1.5f,1.5f,0.0f,
 		-1.5f,1.5f,0.0f,
 		-1.5f,-1.5f,0.0f,
 	// Second square
-	// First triangle
+		// First triangle
 		1.5f,1.5f,0.0f,
 		4.5f,1.5f,0.0f,
 		4.5f,4.5f,0.0f,
-	// Second triangle
+		// Second triangle
 		1.5f,1.5f,0.0f,
 		1.5f,4.5f,0.0f,
 		4.5f,4.5f,0.0f,
 	// Third square
-	// First triangle
+		// First triangle
 		-1.5f,-1.5f,0.0f,
 		-1.5f,-4.5f,0.0f,
 		-4.5f,-4.5f,0.0f,
-	// Second triangle
-		- 1.5f,-1.5f,0.0f,
+		// Second triangle
+		-1.5f,-1.5f,0.0f,
 		-4.5f,-1.5f,0.0f,
 		-4.5f,-4.5f,0.0f,
 	// Forth square
-	// First triangle
+		// First triangle
 		-1.5f,1.5f,0.0f,
 		-1.5f,4.5f,0.0f,
 		-4.5f,4.5f,0.0,
-	// Second triangle
+		// Second triangle
 		-1.5f,1.5f,0.0f,
 		-4.5f,1.5f,0.0f,
 		-4.5f,4.5f,0.0f,
 	// Fifth square
-	// First triangle
+		// First triangle
 		1.5f,-1.5f,0.0f,
 		1.5f,-4.5f,0.0f,
 		4.5f,-4.5f,0.0f,
-	// Second triangle
+		// Second triangle	
 		1.5f,-1.5f,0.0f,
 		4.5f,-1.5f,0.0f,
 		4.5f,-4.5f,0.0f
+
 	};
 
 	GLuint vertexbuffer;
@@ -289,9 +264,34 @@ int main(void)
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(shape_1_buffer), shape_1_buffer, GL_STATIC_DRAW);
 
+	//index of square
+	int square_number = 0;
 
+	//flag to check return to center example sq1->sq2->!sq1!->sq3 so we dont add repeated vertices to shape buffer 
+	bool flag = true;
+	// time to transition
+	double wait_time = 1;//secs
+	//get the time for transition
+	
+	double time = 0;//secs
 	do {
 
+		//change transition time with u key
+		if (glfwGetKey(window, GLFW_KEY_U)) {
+			wait_time = wait_time * 0.7;
+		}
+		if (glfwGetKey(window, GLFW_KEY_D)) {
+			wait_time = wait_time * 1.2;
+		}
+		//get the time for transition
+		//https://www.glfw.org/docs/3.3/group__input.html#gaa6cf4e7a77158a3b8fd00328b1720a4a
+		glfwSetTime(0);
+		 time = glfwGetTime();//secs
+			//wait time for transition
+		 do {
+
+			
+		
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -300,46 +300,65 @@ int main(void)
 
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);  /// Αυτό αφορά την κάμερα  - το αγνοείτε
 
-		// 1rst attribute buffer : vertices
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-		glVertexAttribPointer(
-			0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-			3,                  // size
-			GL_FLOAT,           // type
-			GL_FALSE,           // normalized?
-			0,                  // stride
-			(void*)0            // array buffer offset
-		);
+		
+	
 
-		// Draw the triangle !
-		glDrawArrays(GL_TRIANGLES, square_number, 6); // 6 indices starting at 0 -> 1 square, 2 triangles
-		Sleep(sleeping_time);
-		// Increase the square number after every draw to render the next set of vertices that create the next square
-		if (square_number <= 24) {
-			square_number += 6;
-		}
-		// When the last square is drawn, start over
-		if (square_number > 24) {
-			square_number = 0;
-		}
-		/*
-		glDrawArrays(GL_TRIANGLES, 6, 6);
-		glDrawArrays(GL_TRIANGLES, 12, 6);
-		glDrawArrays(GL_TRIANGLES, 18, 6);
-		glDrawArrays(GL_TRIANGLES, 24, 6);
-		*/
+			// 1rst attribute buffer : vertices
+			glEnableVertexAttribArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+			glVertexAttribPointer(
+				0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+				3,                  // size
+				GL_FLOAT,           // type
+				GL_FALSE,           // normalized?
+				0,                  // stride
+				(void*)0            // array buffer offset
+			);
+		
+			// Draw the triangle !
+			if (flag) //we are at 1st squad
+				glDrawArrays(GL_TRIANGLES, 0, 6); // draw square 1
+			else
+				glDrawArrays(GL_TRIANGLES, square_number, 6); // 6 indices starting at square_number -> 2 triangles
+			
+		
+
 		glDisableVertexAttribArray(0);
-
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
+		//check time for wait
+		time = glfwGetTime() - time;
+		 } while (wait_time > time && glfwGetKey(window, GLFW_KEY_C) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 
-		glfwSetKeyCallback(window, key_callback);
+		 //if done 1st square go next
+		 flag = !flag;
+		// Increase the square number after every draw to render the next set of vertices that create the next square
+		if (square_number <= 24 && !flag) {
+			square_number += 6;
+		}
+		// When the last square is drawn, start over
+		if ( square_number > 24) {
+			square_number = 0;
+			flag = true;
+		}
+		/*
+		glDrawArrays(GL_TRIANGLES, 6, 6);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glDrawArrays(GL_TRIANGLES, 12, 6);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glDrawArrays(GL_TRIANGLES, 18, 6);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glDrawArrays(GL_TRIANGLES, 24, 6);
+		*/
 
-	}
-	while (glfwGetKey(window, GLFW_KEY_C) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
+		
+	
+		
+
+	} 
+	while (glfwGetKey(window, GLFW_KEY_C) != GLFW_PRESS &&  glfwWindowShouldClose(window) == 0);
 
 	// Cleanup VBO
 	glDeleteBuffers(1, &vertexbuffer);
