@@ -64,54 +64,44 @@ float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
 void camera_function()
 {
-	//if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-		//glfwSetWindowShouldClose(window, true);
-	// glfwGetTime is called only once, the first time this function is called
-
 	// Compute time difference between current and last frame
-	//camera speed
-	float speed = static_cast <float> (20.0f * deltaTime); // 3 units / second
+	// camera speed
+	// float cameraSpeed = static_cast <float> (20.0f * deltaTime);
+	float cameraSpeed = (20.0f * deltaTime);
 
 	float FoV = 45.0f;
 
-	//glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 2.5f);
-	// Direction :
-	//glm::vec3 cameraDirection = glm::normalize(position - cameraTarget);
-	// Up vector
-	//glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-
-
 	// Move camera around (UP)y++ (--)
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
+		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 		//cameraFront += cameraPos;
 	}
 
 	// Move camera around (DOWN)y-- (++)
 	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
-		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
+		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 		//cameraFront += cameraPos;
 	}
 
 	// move camera AROUND x (left)
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		cameraPos += cameraUp * speed;
+		cameraPos += cameraUp * cameraSpeed;
 		//cameraFront += cameraPos;
 	}
 	// move camera AROUND x(RIGHT)
 	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
-		cameraPos -= cameraUp * speed;
+		cameraPos -= cameraUp * cameraSpeed;
 		//cameraFront += cameraPos;
 	}
 
 	// move camera BACK
 	if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS) {
-		cameraPos += cameraPos * speed;
+		cameraPos += cameraPos * cameraSpeed;
 		//cameraFront += cameraPos * speed;
 	}
 	// move camera FRONT
 	if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS) {
-		cameraPos -= cameraPos * speed;
+		cameraPos -= cameraPos * cameraSpeed;
 		//cameraFront += cameraPos;
 	}
 
@@ -674,7 +664,6 @@ int main(void)
 	do {
 
 		// per-frame time logic
-		// --------------------
 		float currentFrame = static_cast<float>(glfwGetTime());
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;

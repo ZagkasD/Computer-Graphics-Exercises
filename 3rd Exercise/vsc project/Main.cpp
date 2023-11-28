@@ -50,78 +50,66 @@ glm::mat4 getProjectionMatrix() {
 	return ProjectionMatrix;
 }
 
-////////////////////////////////////////////// <summary>
-/// Add camera function here
-/// </summary>
-
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 30.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, 2.5f);
+// Camera definition
+//
+// Where the camera is located
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, -40.0f);
+// Where the camera is looking
+glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 2.5f);
+// Which side if "up" for the camera in 3d space
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-
+// View direction is a vector that starts at the camera target and points towards the camera position
+glm::vec3 viewDirection = cameraPos - cameraTarget;
 
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
+
 void camera_function()
 {
-	//if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-		//glfwSetWindowShouldClose(window, true);
-	// glfwGetTime is called only once, the first time this function is called
-
 	// Compute time difference between current and last frame
-	//camera speed
-	float speed = static_cast <float> (20.0f * deltaTime); // 3 units / second
+	// camera speed
+	// float speed = static_cast <float> (20.0f * deltaTime);
+	float cameraSpeed = (3.0f * deltaTime);
 
 	float FoV = 45.0f;
 
-	//glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 2.5f);
-	// Direction :
-	//glm::vec3 cameraDirection = glm::normalize(position - cameraTarget);
-	// Up vector
-	//glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-
-
-	// Move camera around (UP)y++ (--)
-	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
-		//cameraFront += cameraPos;
-	}
-
-	// Move camera around (DOWN)y-- (++)
-	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
-		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
-		//cameraFront += cameraPos;
-	}
-
-	// move camera AROUND x (left)
+	// Move camera around x (Up)
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		cameraPos += cameraUp * speed;
-		//cameraFront += cameraPos;
+		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraSpeed, glm::vec3(1.0f, 0.0f, 0.0f));
+		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		cameraUp = glm::vec3(rotationMatrix * glm::vec4(cameraUp, 0.0f));
 	}
-	// move camera AROUND x(RIGHT)
+	// Move camera around x (Down)
 	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
-		cameraPos -= cameraUp * speed;
-		//cameraFront += cameraPos;
+		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraSpeed, glm::vec3(-1.0f, 0.0f, 0.0f));
+		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		cameraUp = glm::vec3(rotationMatrix * glm::vec4(cameraUp, 0.0f));
 	}
-
+	// move camera AROUND y (Right)
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraSpeed, glm::vec3(0.0f, 1.0f, 0.0f));
+		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		cameraUp = glm::vec3(rotationMatrix * glm::vec4(cameraUp, 0.0f));
+	}
+	// move camera AROUND y (Left)
+	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
+		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraSpeed, glm::vec3(0.0f, -1.0f, 0.0f));
+		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		cameraUp = glm::vec3(rotationMatrix * glm::vec4(cameraUp, 0.0f));
+	}
 	// move camera BACK
 	if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS) {
-		cameraPos += cameraPos * speed;
-		//cameraFront += cameraPos * speed;
+		cameraPos += cameraPos * (cameraSpeed);
 	}
 	// move camera FRONT
 	if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS) {
-		cameraPos -= cameraPos * speed;
-		//cameraFront += cameraPos;
+		cameraPos -= cameraPos * (cameraSpeed);
 	}
 
-	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
 	ProjectionMatrix = glm::perspective(glm::radians(FoV), 4.0f / 4.0f, 0.1f, 100.0f);
-
-	ViewMatrix = glm::lookAt(cameraPos, cameraFront, cameraUp);
-
-	// For the next frame, the "last time" will be "now"
-	//lastTime = currentTime1;
+	
+	ViewMatrix = glm::lookAt(cameraPos, cameraTarget, cameraUp);
 }
 
 /////////////////////////////////////////////////
@@ -290,7 +278,7 @@ int main(void)
 			-5.0f,2.5f, 5.0f,//2
 			5.0f, 2.5f, 5.0f,//3
 			//second triangle
-			 -5.0f,-2.5f,5.0f, //1
+			-5.0f,-2.5f,5.0f, //1
 			5.0f, 2.5f, 5.0f,//3
 			5.0f, -2.5f,5.0f,//4
 
@@ -478,29 +466,29 @@ int main(void)
 	};
 	*/
 
-	GLfloat a = 0.5f;
+	GLfloat a = 1.0f;
 	GLfloat b = 1.0f;
 	static const GLfloat colorA[] = {
-		0.00f,  0.488f,  0.000f,a,
-		0.00f,  0.488f,  0.000f,a,
-		0.00f,  0.488f,  0.000f,a,
-		0.00f,  0.488f,  0.000f,a,
-		0.00f,  0.488f,  0.000f,a,
-		0.00f,  0.488f,  0.000f,a,
-
-		1.00f,  0.000f,  0.000f,a,
-		1.00f,  0.000f,  0.000f,a,
-		1.00f,  0.000f,  0.000f,a,
-		1.00f,  0.000f,  0.000f,a,
-		1.00f,  0.000f,  0.000f,a,
-		1.00f,  0.000f,  0.000f,a,
-
-		1.00f,  0.00f,  1.000f,a,
-		1.00f,  0.00f,  1.000f,a,
-		1.00f,  0.00f,  1.000f,a,
-		1.00f,  0.00f,  1.000f,a,
-		1.00f,  0.00f,  1.000f,a,
-		1.00f,  0.00f,  1.000f,a,
+		0.000f,  0.488f,  0.000f,a,
+		0.000f,  0.488f,  0.000f,a,
+		0.000f,  0.488f,  0.000f,a,
+		0.000f,  0.488f,  0.000f,a,
+		0.000f,  0.488f,  0.000f,a,
+		0.000f,  0.488f,  0.000f,a,
+			
+		1.000f,  0.000f,  0.000f,a,
+		1.000f,  0.000f,  0.000f,a,
+		1.000f,  0.000f,  0.000f,a,
+		1.000f,  0.000f,  0.000f,a,
+		1.000f,  0.000f,  0.000f,a,
+		1.000f,  0.000f,  0.000f,a,
+			
+		1.000f,  0.000f,  1.000f,a,
+		1.000f,  0.000f,  1.000f,a,
+		1.000f,  0.000f,  1.000f,a,
+		1.000f,  0.000f,  1.000f,a,
+		1.000f,  0.000f,  1.000f,a,
+		1.000f,  0.000f,  1.000f,a,
 
 		0.600f,  0.400f,  0.600f,a,
 		0.600f,  0.400f,  0.600f,a,
@@ -523,7 +511,7 @@ int main(void)
 		0.300f,  1.000f,  0.300f,a,
 		0.300f,  1.000f,  0.300f,a,
 	};
-
+	/*
 	static const GLfloat colorB[] = {
 		0.0f,  0.0f,  0.0f,b,
 		0.0f,  0.0f,  0.0f,b,
@@ -611,7 +599,7 @@ int main(void)
 		1.0f,  1.0f,  1.0f,b,
 		1.0f,  1.0f,  1.0f,b,
 	};
-
+	*/
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
@@ -635,12 +623,12 @@ int main(void)
 	glGenBuffers(1, &colorbufferA);
 	glBindBuffer(GL_ARRAY_BUFFER, colorbufferA);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(colorA), colorA, GL_STATIC_DRAW);
-
+	/*
 	GLuint colorbufferB;
 	glGenBuffers(1, &colorbufferB);
 	glBindBuffer(GL_ARRAY_BUFFER, colorbufferB);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(colorB), colorB, GL_STATIC_DRAW);
-
+	*/
 	/*
 	* For the small cube
 	 
@@ -805,7 +793,7 @@ int main(void)
 
 		// 2nd attribute buffer : colors
 		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, colorbufferB);
+		glBindBuffer(GL_ARRAY_BUFFER, colorbufferA);
 		glVertexAttribPointer(
 			1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
 			4,                                // size
