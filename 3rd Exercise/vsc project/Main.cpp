@@ -261,15 +261,14 @@ int main(void)
 		return -1;
 	}
 
-	// Ensure we can capture the escape key being pressed below
+	// Ensure we can capture the key being pressed below
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
 	// Dark gray background
 	glClearColor(0.3f, 0.3f, 0.3f, 0.0f);
 
-	//enable depth test
+	// Makes objects opaque
 	glEnable(GL_DEPTH_TEST);
-
 
 	// Accept fragment if it closer to the camera than the former one
 	glDepthFunc(GL_LESS);
@@ -279,27 +278,8 @@ int main(void)
 	glBindVertexArray(VertexArrayID);
 
 	// Create and compile our GLSL program from the shaders
-
 	GLuint programID = LoadShaders("P1C.vertexshader", "P1C.fragmentshader");
-
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
-
-	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-	//glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 4.0f, 0.1f, 100.0f);
-	// Camera matrix
-	//glm::mat4 View = glm::lookAt(
-		//glm::vec3(0.0f, 0.0f, 30.0f), // Camera is at (0,0,30), in World Space
-		//glm::vec3(0.0f, 0.0f, 2.5f), // and looks at the  E
-		//glm::vec3(0.0f, 1.0f, 0.0f)  // y is up (set to 0,-1,0 to look upside-down)
-	//);
-	// Model matrix : an identity matrix (model will be at the origin)
-	//glm::mat4 Model = glm::mat4(1.0f);
-	// Our ModelViewProjection : multiplication of our 3 matrices
-	//glm::mat4 MVP = Projection * View * Model; // Remember, matrix multiplication is the other way around
-
-	//half values 
-	GLfloat len = 5.0f, wid = 2.5f, heig = 2.5f;
-
 
 	//for parallelogram A (the small one)
 	static const GLfloat cube1[] =
@@ -314,55 +294,55 @@ int main(void)
 			5.0f, 2.5f, 5.0f,//3
 			5.0f, -2.5f,5.0f,//4
 
-			//right face
-				//1st triangle
-				5.0f, 2.5f, 5.0f,//3
-				5.0f, -2.5f,5.0f,//4
-				5.0f, 2.5f, 0.0f,//6
-				//second triangle
-				5.0f, -2.5f,5.0f,//4
-				5.0f, 2.5f, 0.0f,//6
-				5.0f, -2.5f,0.0f,//5
+		//right face
+			//1st triangle
+			5.0f, 2.5f, 5.0f,//3
+			5.0f, -2.5f,5.0f,//4
+			5.0f, 2.5f, 0.0f,//6
+			//second triangle
+			5.0f, -2.5f,5.0f,//4
+			5.0f, 2.5f, 0.0f,//6
+			5.0f, -2.5f,0.0f,//5
 
-				//left face
-					//1st triangle
-					-5.0f,-2.5f,5.0f, //1
-					-5.0f,2.5f, 5.0f,//2
-					-5.0f, -2.5f, 0.0f,//8
-					//second triangle
-					-5.0f,2.5f, 5.0f,//2
-					-5.0f, -2.5f, 0.0f,//8
-					-5.0f, 2.5f,0.0f,//7
+		//left face
+			//1st triangle
+			-5.0f,-2.5f,5.0f, //1
+			-5.0f,2.5f, 5.0f,//2
+			-5.0f, -2.5f, 0.0f,//8
+			//second triangle
+			-5.0f,2.5f, 5.0f,//2
+			-5.0f, -2.5f, 0.0f,//8
+			-5.0f, 2.5f,0.0f,//7
 
-					//top face
-						//1st triangle
-						-5.0f,2.5f, 5.0f,//2
-						5.0f, 2.5f, 5.0f,//3
-						5.0f, 2.5f, 0.0f,//6
-						//second triangle
-						-5.0f,2.5f, 5.0f,//2
-						5.0f, 2.5f, 0.0f,//6
-						-5.0f, 2.5f,0.0f,//7
+		//top face
+			//1st triangle
+			-5.0f,2.5f, 5.0f,//2
+			5.0f, 2.5f, 5.0f,//3
+			5.0f, 2.5f, 0.0f,//6
+			//second triangle
+			-5.0f,2.5f, 5.0f,//2
+			5.0f, 2.5f, 0.0f,//6
+			-5.0f, 2.5f,0.0f,//7
 
-						//bot face
-							//1st triangle
-							-5.0f,-2.5f,5.0f, //1
-							-5.0f, -2.5f, 0.0f,//8
-							 5.0f, -2.5f,0.0f,//5
-							 //second triangle
-							 5.0f, -2.5f,0.0f,//5
-							 -5.0f,-2.5f,5.0f, //1
-							 5.0f, -2.5f,5.0f,//4
+		//bot face
+			//1st triangle
+			-5.0f,-2.5f,5.0f, //1
+			-5.0f, -2.5f, 0.0f,//8
+			5.0f, -2.5f,0.0f,//5
+			//second triangle
+			5.0f, -2.5f,0.0f,//5
+			-5.0f,-2.5f,5.0f, //1
+			5.0f, -2.5f,5.0f,//4
 
-							 //back face
-								 //1st triangle
-								 5.0f, 2.5f, 0.0f,//6
-								 5.0f, -2.5f,0.0f,//5
-								 -5.0f, 2.5f,0.0f,//7
-								 //second triangle
-								 5.0f, -2.5f,0.0f,//5
-								 -5.0f, 2.5f,0.0f,//7
-								 -5.0f, -2.5f, 0.0f,//8
+		//back face
+			//1st triangle
+			5.0f, 2.5f, 0.0f,//6
+			5.0f, -2.5f,0.0f,//5
+			-5.0f, 2.5f,0.0f,//7
+			//second triangle
+			5.0f, -2.5f,0.0f,//5
+			-5.0f, 2.5f,0.0f,//7
+			-5.0f, -2.5f, 0.0f,//8
 	};
 
 
@@ -376,59 +356,59 @@ int main(void)
 			2.5f, 14.0f,5.0f,//4b
 			//second triangle
 			-2.5f,0.0f, 5.0f,//2b
-			 2.5f, 0.0f,5.0f,//3b
+			2.5f, 0.0f,5.0f,//3b
 			2.5f, 14.0f,5.0f,//4b
 
-			//right face
-				//1st triangle
-				2.5f, 14.0f,5.0f,//4b
-				2.5f, 0.0f,5.0f,//3b
-				2.5f, 14.0f, 0.0f,//6b
-				//second triangle
-				2.5f, 0.0f,5.0f,//3b
-				2.5f, 14.0f, 0.0f,//6b
+		//right face
+			//1st triangle
+			2.5f, 14.0f,5.0f,//4b
+			2.5f, 0.0f,5.0f,//3b
+			2.5f, 14.0f, 0.0f,//6b
+			//second triangle
+			2.5f, 0.0f,5.0f,//3b
+			2.5f, 14.0f, 0.0f,//6b
+			2.5f, 0.0f,0.0f,//5b
+
+		//left face
+			//1st triangle
+			-2.5f,14.0f,5.0f, //1b
+			-2.5f,0.0f, 5.0f,//2b
+			-2.5f, 0.0f, 0.0f,//8b
+			//second triangle
+			-2.5f,14.0f,5.0f, //1b
+			-2.5f, 0.0f, 0.0f,//8b
+			-2.5f, 14.0f,0.0f,//7b
+
+		//top face
+			//1st triangle
+			-2.5f,14.0f,5.0f, //1b
+			-2.5f, 14.0f,0.0f,//7b
+			2.5f, 14.0f, 0.0f,//6b
+			//second triangle
+			-2.5f,14.0f,5.0f, //1b
+			2.5f, 14.0f, 0.0f,//6b
+			2.5f, 14.0f,5.0f,//4b
+
+		//bot face
+			//1st triangle
+			-2.5f,0.0f, 5.0f,//2b
+			-2.5f, 0.0f, 0.0f,//8b
+			2.5f, 0.0f,0.0f,//5b
+
+			//second triangle
+			-2.5f,0.0f, 5.0f,//2b
 				2.5f, 0.0f,0.0f,//5b
+			2.5f, 0.0f,5.0f,//3b
 
-				//left face
-					//1st triangle
-					-2.5f,14.0f,5.0f, //1b
-					-2.5f,0.0f, 5.0f,//2b
-					-2.5f, 0.0f, 0.0f,//8b
-					//second triangle
-					-2.5f,14.0f,5.0f, //1b
-					-2.5f, 0.0f, 0.0f,//8b
-					-2.5f, 14.0f,0.0f,//7b
-
-					//top face
-						//1st triangle
-						-2.5f,14.0f,5.0f, //1b
-						-2.5f, 14.0f,0.0f,//7b
-						2.5f, 14.0f, 0.0f,//6b
-						//second triangle
-						-2.5f,14.0f,5.0f, //1b
-						2.5f, 14.0f, 0.0f,//6b
-						2.5f, 14.0f,5.0f,//4b
-
-						//bot face
-							//1st triangle
-							-2.5f,0.0f, 5.0f,//2b
-							-2.5f, 0.0f, 0.0f,//8b
-							2.5f, 0.0f,0.0f,//5b
-
-							//second triangle
-							-2.5f,0.0f, 5.0f,//2b
-							 2.5f, 0.0f,0.0f,//5b
-							2.5f, 0.0f,5.0f,//3b
-
-							//back face
-								//1st triangle
-								2.5f, 0.0f,0.0f,//5b
-								2.5f, 14.0f, 0.0f,//6b
-								-2.5f, 14.0f,0.0f,//7b
-								//second triangle
-								2.5f, 0.0f,0.0f,//5b
-								-2.5f, 14.0f,0.0f,//7b
-								-2.5f, 0.0f, 0.0f,//8b
+		//back face
+			//1st triangle
+			2.5f, 0.0f,0.0f,//5b
+			2.5f, 14.0f, 0.0f,//6b
+			-2.5f, 14.0f,0.0f,//7b
+			//second triangle
+			2.5f, 0.0f,0.0f,//5b
+			-2.5f, 14.0f,0.0f,//7b
+			-2.5f, 0.0f, 0.0f,//8b
 	};
 
 	/*
@@ -445,151 +425,148 @@ int main(void)
 			-1.0f, -6.0f,-3.0f,//3c
 			1.0f, -6.0f,-3.0f,//4c
 
-			//right face
-				//1st triangle
-				1.0f,-4.0f, -3.0f,//2c
-				1.0f, -6.0f,-3.0f,//4c
-				1.0f, -4.0f, -5.0f,//6c
-				//second triangle
-				1.0f, -6.0f,-3.0f,//4c
-				1.0f, -4.0f, -5.0f,//6c
-				1.0f, -6.0f,-5.0f,//5c
+		//right face
+			//1st triangle
+			1.0f,-4.0f, -3.0f,//2c
+			1.0f, -6.0f,-3.0f,//4c
+			1.0f, -4.0f, -5.0f,//6c
+			//second triangle
+			1.0f, -6.0f,-3.0f,//4c
+			1.0f, -4.0f, -5.0f,//6c
+			1.0f, -6.0f,-5.0f,//5c
 
-				//left face
-					//1st triangle
-					-1.0f,-4.0f,-3.0f, //1c
-					-1.0f, -6.0f,-3.0f,//3c
-					-1.0f, -6.0f, -5.0f,//8c
-					//second triangle
-					-1.0f,-4.0f,-3.0f, //1c
-					-1.0f, -6.0f, -5.0f,//8c
-					-1.0f, -4.0f,-5.0f,//7c
+		//left face
+			//1st triangle
+			-1.0f,-4.0f,-3.0f, //1c
+			-1.0f, -6.0f,-3.0f,//3c
+			-1.0f, -6.0f, -5.0f,//8c
+			//second triangle
+			-1.0f,-4.0f,-3.0f, //1c
+			-1.0f, -6.0f, -5.0f,//8c
+			-1.0f, -4.0f,-5.0f,//7c
 
-					//top face
-						//1st triangle
-						-1.0f,-4.0f,-3.0f, //1c
-						1.0f,-4.0f, -3.0f,//2c
-						1.0f, -4.0f, -5.0f,//6c
-						//second triangle
-						-1.0f,-4.0f,-3.0f, //1c
-						1.0f, -4.0f, -5.0f,//6c
-						-1.0f, -4.0f,-5.0f,//7c
+		//top face
+			//1st triangle
+			-1.0f,-4.0f,-3.0f, //1c
+			1.0f,-4.0f, -3.0f,//2c
+			1.0f, -4.0f, -5.0f,//6c
+			//second triangle
+			-1.0f,-4.0f,-3.0f, //1c
+			1.0f, -4.0f, -5.0f,//6c
+			-1.0f, -4.0f,-5.0f,//7c
 
-						//bot face
-							//1st triangle
-							-1.0f, -6.0f,-3.0f,//3c
-							1.0f, -6.0f,-3.0f,//4c
-							-1.0f, -6.0f, -5.0f,//8c
+		//bot face
+			//1st triangle
+			-1.0f, -6.0f,-3.0f,//3c
+			1.0f, -6.0f,-3.0f,//4c
+			-1.0f, -6.0f, -5.0f,//8c
 
-							//second triangle
-							1.0f, -6.0f,-3.0f,//4c
-							-1.0f, -6.0f, -5.0f,//8c
-							1.0f, -6.0f,-5.0f,//5c
+			//second triangle
+			1.0f, -6.0f,-3.0f,//4c
+			-1.0f, -6.0f, -5.0f,//8c
+			1.0f, -6.0f,-5.0f,//5c
 
-							//back face
-								//1st triangle
-								1.0f, -4.0f, -5.0f,//6c
-								1.0f, -6.0f,-5.0f,//5c
-								-1.0f, -6.0f, -5.0f,//8c
-								//second triangle
-								1.0f, -4.0f, -5.0f,//6c
-								-1.0f, -4.0f,-5.0f,//7c
-								-1.0f, -6.0f, -5.0f,//8c
+		//back face
+			//1st triangle
+			1.0f, -4.0f, -5.0f,//6c
+			1.0f, -6.0f,-5.0f,//5c
+			-1.0f, -6.0f, -5.0f,//8c
+			//second triangle
+			1.0f, -4.0f, -5.0f,//6c
+			-1.0f, -4.0f,-5.0f,//7c
+			-1.0f, -6.0f, -5.0f,//8c
 	};
 	*/
 
 	GLfloat a = 0.5f;
 	GLfloat b = 1.0f;
 	static const GLfloat colorA[] = {
+		0.00f,  0.488f,  0.000f,a,
+		0.00f,  0.488f,  0.000f,a,
+		0.00f,  0.488f,  0.000f,a,
+		0.00f,  0.488f,  0.000f,a,
+		0.00f,  0.488f,  0.000f,a,
+		0.00f,  0.488f,  0.000f,a,
 
-	0.00f,  0.488f,  0.000f,a,
-	0.00f,  0.488f,  0.000f,a,
-	0.00f,  0.488f,  0.000f,a,
-	0.00f,  0.488f,  0.000f,a,
-	0.00f,  0.488f,  0.000f,a,
-	0.00f,  0.488f,  0.000f,a,
+		1.00f,  0.000f,  0.000f,a,
+		1.00f,  0.000f,  0.000f,a,
+		1.00f,  0.000f,  0.000f,a,
+		1.00f,  0.000f,  0.000f,a,
+		1.00f,  0.000f,  0.000f,a,
+		1.00f,  0.000f,  0.000f,a,
 
-	1.00f,  0.000f,  0.000f,a,
-	1.00f,  0.000f,  0.000f,a,
-	1.00f,  0.000f,  0.000f,a,
-	1.00f,  0.000f,  0.000f,a,
-	1.00f,  0.000f,  0.000f,a,
-	1.00f,  0.000f,  0.000f,a,
+		1.00f,  0.00f,  1.000f,a,
+		1.00f,  0.00f,  1.000f,a,
+		1.00f,  0.00f,  1.000f,a,
+		1.00f,  0.00f,  1.000f,a,
+		1.00f,  0.00f,  1.000f,a,
+		1.00f,  0.00f,  1.000f,a,
 
-	1.00f,  0.00f,  1.000f,a,
-	1.00f,  0.00f,  1.000f,a,
-	1.00f,  0.00f,  1.000f,a,
-	1.00f,  0.00f,  1.000f,a,
-	1.00f,  0.00f,  1.000f,a,
-	1.00f,  0.00f,  1.000f,a,
+		0.600f,  0.400f,  0.600f,a,
+		0.600f,  0.400f,  0.600f,a,
+		0.600f,  0.400f,  0.600f,a,
+		0.600f,  0.400f,  0.600f,a,
+		0.600f,  0.400f,  0.600f,a,
+		0.600f,  0.400f,  0.600f,a,
 
-	0.600f,  0.400f,  0.600f,a,
-	0.600f,  0.400f,  0.600f,a,
-	0.600f,  0.400f,  0.600f,a,
-	0.600f,  0.400f,  0.600f,a,
-	0.600f,  0.400f,  0.600f,a,
-	0.600f,  0.400f,  0.600f,a,
+		0.000f,  1.000f,  0.000f,a,
+		0.000f,  1.000f,  0.000f,a,
+		0.000f,  1.000f,  0.000f,a,
+		0.000f,  1.000f,  0.000f,a,
+		0.000f,  1.000f,  0.000f,a,
+		0.000f,  1.000f,  0.000f,a,
 
-	0.000f,  1.000f,  0.000f,a,
-	0.000f,  1.000f,  0.000f,a,
-	0.000f,  1.000f,  0.000f,a,
-	0.000f,  1.000f,  0.000f,a,
-	0.000f,  1.000f,  0.000f,a,
-	0.000f,  1.000f,  0.000f,a,
-
-	0.300f,  1.000f,  0.300f,a,
-	0.300f,  1.000f,  0.300f,a,
-	0.300f,  1.000f,  0.300f,a,
-	0.300f,  1.000f,  0.300f,a,
-	0.300f,  1.000f,  0.300f,a,
-	0.300f,  1.000f,  0.300f,a,
+		0.300f,  1.000f,  0.300f,a,
+		0.300f,  1.000f,  0.300f,a,
+		0.300f,  1.000f,  0.300f,a,
+		0.300f,  1.000f,  0.300f,a,
+		0.300f,  1.000f,  0.300f,a,
+		0.300f,  1.000f,  0.300f,a,
 	};
-
 
 	static const GLfloat colorB[] = {
 		0.0f,  0.0f,  0.0f,b,
-	0.0f,  0.0f,  0.0f,b,
-	0.0f,  0.0f,  0.0f,b,
-	0.0f,  0.0f,  0.0f,b,
-	0.0f,  0.0f,  0.0f,b,
-	0.0f,  0.0f,  0.0f,b,
+		0.0f,  0.0f,  0.0f,b,
+		0.0f,  0.0f,  0.0f,b,
+		0.0f,  0.0f,  0.0f,b,
+		0.0f,  0.0f,  0.0f,b,
+		0.0f,  0.0f,  0.0f,b,
 
-	0.0f,  0.0f,  0.3f,b,
-	0.0f,  0.0f,  0.3f,b,
-	0.0f,  0.0f,  0.3f,b,
-	0.0f,  0.0f,  0.3f,b,
-	0.0f,  0.0f,  0.3f,b,
-	0.0f,  0.0f,  0.3f,b,
+		0.0f,  0.0f,  0.3f,b,
+		0.0f,  0.0f,  0.3f,b,
+		0.0f,  0.0f,  0.3f,b,
+		0.0f,  0.0f,  0.3f,b,
+		0.0f,  0.0f,  0.3f,b,
+		0.0f,  0.0f,  0.3f,b,
 
-	0.2f,  0.2f,  0.8f,b,
-	0.2f,  0.2f,  0.8f,b,
-	0.2f,  0.2f,  0.8f,b,
-	0.2f,  0.2f,  0.8f,b,
-	0.2f,  0.2f,  0.8f,b,
-	0.2f,  0.2f,  0.8f,b,
+		0.2f,  0.2f,  0.8f,b,
+		0.2f,  0.2f,  0.8f,b,
+		0.2f,  0.2f,  0.8f,b,
+		0.2f,  0.2f,  0.8f,b,
+		0.2f,  0.2f,  0.8f,b,
+		0.2f,  0.2f,  0.8f,b,
 
-	0.000f,  0.000f,  0.600f,b,
-	0.000f,  0.000f,  0.600f,b,
-	0.000f,  0.000f,  0.600f,b,
-	0.000f,  0.000f,  0.600f,b,
-	0.000f,  0.000f,  0.600f,b,
-	0.000f,  0.000f,  0.600f,b,
+		0.000f,  0.000f,  0.600f,b,
+		0.000f,  0.000f,  0.600f,b,
+		0.000f,  0.000f,  0.600f,b,
+		0.000f,  0.000f,  0.600f,b,
+		0.000f,  0.000f,  0.600f,b,
+		0.000f,  0.000f,  0.600f,b,
 
-	0.300f,  0.300f,  0.600f,b,
-	0.300f,  0.300f,  0.600f,b,
-	0.300f,  0.300f,  0.600f,b,
-	0.300f,  0.300f,  0.600f,b,
-	0.300f,  0.300f,  0.600f,b,
-	0.300f,  0.300f,  0.600f,b,
+		0.300f,  0.300f,  0.600f,b,
+		0.300f,  0.300f,  0.600f,b,
+		0.300f,  0.300f,  0.600f,b,
+		0.300f,  0.300f,  0.600f,b,
+		0.300f,  0.300f,  0.600f,b,
+		0.300f,  0.300f,  0.600f,b,
 
-	0.500f,  0.500f,  0.900f,b,
-	0.500f,  0.500f,  0.900f,b,
-	0.500f,  0.500f,  0.900f,b,
-	0.500f,  0.500f,  0.900f,b,
-	0.500f,  0.500f,  0.900f,b,
-	0.500f,  0.500f,  0.900f,b,
+		0.500f,  0.500f,  0.900f,b,
+		0.500f,  0.500f,  0.900f,b,
+		0.500f,  0.500f,  0.900f,b,
+		0.500f,  0.500f,  0.900f,b,
+		0.500f,  0.500f,  0.900f,b,
+		0.500f,  0.500f,  0.900f,b,
 	};
-
 
 	static const GLfloat colorC[] = {
 		1.0f,  1.0f,  1.0f,b,
@@ -635,23 +612,25 @@ int main(void)
 		1.0f,  1.0f,  1.0f,b,
 	};
 
-
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(cube1), cube1, GL_STATIC_DRAW);
 
-
 	GLuint vertexbuffer2;
 	glGenBuffers(1, &vertexbuffer2);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer2);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(cube2), cube2, GL_STATIC_DRAW);
+	
 	/*
+	* For the small cube
+	* 
 	GLuint vertexbuffer3;
 	glGenBuffers(1, &vertexbuffer3);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer3);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(cube3), cube3, GL_STATIC_DRAW);
 	*/
+
 	GLuint colorbufferA;
 	glGenBuffers(1, &colorbufferA);
 	glBindBuffer(GL_ARRAY_BUFFER, colorbufferA);
@@ -662,10 +641,14 @@ int main(void)
 	glBindBuffer(GL_ARRAY_BUFFER, colorbufferB);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(colorB), colorB, GL_STATIC_DRAW);
 
+	/*
+	* For the small cube
+	 
 	GLuint colorbufferC;
 	glGenBuffers(1, &colorbufferC);
 	glBindBuffer(GL_ARRAY_BUFFER, colorbufferC);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(colorC), colorC, GL_STATIC_DRAW);
+	*/
 
 	double currentTime = glfwGetTime();
 
@@ -702,9 +685,11 @@ int main(void)
 
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
-
-		//get keys for scaling mult by delta time to limit fps and make sure it changes at normal speed we can see
-		//change scale x up with u key down with p key
+		/*
+		* Get keys for scaling
+		* Multiply by delta time to limit fps and make sure it changes at normal speed
+		*/
+		// change scale x up with u key down with p key
 		if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS) {
 			//deltaTime = float(glfwGetTime() - currentTime);
 			scalex += 2 * 2.0f * deltaTime;
@@ -733,10 +718,10 @@ int main(void)
 			scalez -= 2 * 2.0f * deltaTime;
 		}
 
-
 		/*
-		//draw C cube
-		// 1rst attribute buffer : vertices
+		* draw C cube
+		* 1st attribute buffer : vertices
+		* 
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer3);
 		glVertexAttribPointer(
@@ -749,6 +734,7 @@ int main(void)
 		);
 		*/
 
+		/*
 		// 2nd attribute buffer : colors
 		glEnableVertexAttribArray(1);
 		glBindBuffer(GL_ARRAY_BUFFER, colorbufferC);
@@ -760,15 +746,12 @@ int main(void)
 			0,                                // stride
 			(void*)0                          // array buffer offset
 		);
+		*/
 
 		// Draw the triangle !
 		glDrawArrays(GL_TRIANGLES, 0, 36); // 3 indices starting at 0 -> 1 triangle
 
-
-
 		// TRANSFORMATION
-		// 			// TRANSFORMATION
-
 		glm::mat4 myScalingMatrix = glm::scale(glm::vec3(scalex, scaley, scalez));
 
 		MVP = ProjectionMatrix * ViewMatrix * myScalingMatrix;
@@ -776,8 +759,8 @@ int main(void)
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
 
-		//draw A cube
-			// 1rst attribute buffer : vertices
+		// draw A cube
+		// 1st attribute buffer : vertices
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 		glVertexAttribPointer(
@@ -807,8 +790,8 @@ int main(void)
 
 
 
-		//draw B cube
-		   // 1rst attribute buffer : vertices
+		// draw B cube
+		// 1rst attribute buffer : vertices
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer2);
 		glVertexAttribPointer(
@@ -835,7 +818,7 @@ int main(void)
 		// Draw the triangle !
 		glDrawArrays(GL_TRIANGLES, 0, 36); // 3 indices starting at 0 -> 1 triangle
 
-		//transformation
+		// transformation
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 
