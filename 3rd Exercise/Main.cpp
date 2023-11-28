@@ -34,14 +34,8 @@ GLFWwindow* window;
 using namespace glm;
 using namespace std;
 
-/// <summary>
-/// //////////////////////////////////////////////
-/// </summary>
-
-
 glm::mat4 ViewMatrix;
 glm::mat4 ProjectionMatrix;
-
 
 glm::mat4 getViewMatrix() {
 	return ViewMatrix;
@@ -51,9 +45,8 @@ glm::mat4 getProjectionMatrix() {
 }
 
 // Camera definition
-//
 // Where the camera is located
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, -40.0f);
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 40.0f);
 // Where the camera is looking
 glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 2.5f);
 // Which side if "up" for the camera in 3d space
@@ -65,8 +58,7 @@ glm::vec3 viewDirection = cameraPos - cameraTarget;
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
 
-void camera_function()
-{
+void camera_function() {
 	// Compute time difference between current and last frame
 	// camera speed
 	// float speed = static_cast <float> (20.0f * deltaTime);
@@ -108,11 +100,10 @@ void camera_function()
 	}
 
 	ProjectionMatrix = glm::perspective(glm::radians(FoV), 4.0f / 4.0f, 0.1f, 100.0f);
-	
+
 	ViewMatrix = glm::lookAt(cameraPos, cameraTarget, cameraUp);
 }
 
-/////////////////////////////////////////////////
 
 GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path) {
 
@@ -208,15 +199,10 @@ GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path)
 
 	return ProgramID;
 }
-///////////////////////////////////////////////////
 
-
-
-int main(void)
-{
+int main(void) {
 	// Initialise GLFW
-	if (!glfwInit())
-	{
+	if (!glfwInit()) {
 		fprintf(stderr, "Failed to initialize GLFW\n");
 		getchar();
 		return -1;
@@ -230,7 +216,6 @@ int main(void)
 
 	// Open a window and create its OpenGL context
 	window = glfwCreateWindow(950, 950, u8"Εργασία 1Γ – CSG – Boolean Operations", NULL, NULL);
-
 
 	if (window == NULL) {
 		fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
@@ -270,204 +255,134 @@ int main(void)
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 
 	//for parallelogram A (the small one)
-	static const GLfloat cube1[] =
-	{
+	static const GLfloat cube1[] = {
 		//front face
-			//1st triangle
-			-5.0f,-2.5f,5.0f, //1
-			-5.0f,2.5f, 5.0f,//2
-			5.0f, 2.5f, 5.0f,//3
-			//second triangle
-			-5.0f,-2.5f,5.0f, //1
-			5.0f, 2.5f, 5.0f,//3
-			5.0f, -2.5f,5.0f,//4
+		//1st triangle
+		-5.0f,-2.5f,5.0f, //1
+		-5.0f,2.5f, 5.0f,//2
+		5.0f, 2.5f, 5.0f,//3
+		//second triangle
+		-5.0f,-2.5f,5.0f, //1
+		5.0f, 2.5f, 5.0f,//3
+		5.0f, -2.5f,5.0f,//4
 
 		//right face
-			//1st triangle
-			5.0f, 2.5f, 5.0f,//3
-			5.0f, -2.5f,5.0f,//4
-			5.0f, 2.5f, 0.0f,//6
-			//second triangle
-			5.0f, -2.5f,5.0f,//4
-			5.0f, 2.5f, 0.0f,//6
-			5.0f, -2.5f,0.0f,//5
+		//1st triangle
+		5.0f, 2.5f, 5.0f,//3
+		5.0f, -2.5f,5.0f,//4
+		5.0f, 2.5f, 0.0f,//6
+		//second triangle
+		5.0f, -2.5f,5.0f,//4
+		5.0f, 2.5f, 0.0f,//6
+		5.0f, -2.5f,0.0f,//5
 
 		//left face
-			//1st triangle
-			-5.0f,-2.5f,5.0f, //1
-			-5.0f,2.5f, 5.0f,//2
-			-5.0f, -2.5f, 0.0f,//8
-			//second triangle
-			-5.0f,2.5f, 5.0f,//2
-			-5.0f, -2.5f, 0.0f,//8
-			-5.0f, 2.5f,0.0f,//7
+		//1st triangle
+		-5.0f,-2.5f,5.0f, //1
+		-5.0f,2.5f, 5.0f,//2
+		-5.0f, -2.5f, 0.0f,//8
+		//second triangle
+		-5.0f,2.5f, 5.0f,//2
+		-5.0f, -2.5f, 0.0f,//8
+		-5.0f, 2.5f,0.0f,//7
 
 		//top face
-			//1st triangle
-			-5.0f,2.5f, 5.0f,//2
-			5.0f, 2.5f, 5.0f,//3
-			5.0f, 2.5f, 0.0f,//6
-			//second triangle
-			-5.0f,2.5f, 5.0f,//2
-			5.0f, 2.5f, 0.0f,//6
-			-5.0f, 2.5f,0.0f,//7
+		//1st triangle
+		-5.0f,2.5f, 5.0f,//2
+		5.0f, 2.5f, 5.0f,//3
+		5.0f, 2.5f, 0.0f,//6
+		//second triangle
+		-5.0f,2.5f, 5.0f,//2
+		5.0f, 2.5f, 0.0f,//6
+		-5.0f, 2.5f,0.0f,//7
 
 		//bot face
-			//1st triangle
-			-5.0f,-2.5f,5.0f, //1
-			-5.0f, -2.5f, 0.0f,//8
-			5.0f, -2.5f,0.0f,//5
-			//second triangle
-			5.0f, -2.5f,0.0f,//5
-			-5.0f,-2.5f,5.0f, //1
-			5.0f, -2.5f,5.0f,//4
+		//1st triangle
+		-5.0f,-2.5f,5.0f, //1
+		-5.0f, -2.5f, 0.0f,//8
+		5.0f, -2.5f,0.0f,//5
+		//second triangle
+		5.0f, -2.5f,0.0f,//5
+		-5.0f,-2.5f,5.0f, //1
+		5.0f, -2.5f,5.0f,//4
 
 		//back face
-			//1st triangle
-			5.0f, 2.5f, 0.0f,//6
-			5.0f, -2.5f,0.0f,//5
-			-5.0f, 2.5f,0.0f,//7
-			//second triangle
-			5.0f, -2.5f,0.0f,//5
-			-5.0f, 2.5f,0.0f,//7
-			-5.0f, -2.5f, 0.0f,//8
+		//1st triangle
+		5.0f, 2.5f, 0.0f,//6
+		5.0f, -2.5f,0.0f,//5
+		-5.0f, 2.5f,0.0f,//7
+		//second triangle
+		5.0f, -2.5f,0.0f,//5
+		-5.0f, 2.5f,0.0f,//7
+		-5.0f, -2.5f, 0.0f,//8
 	};
-
 
 	//for parallelogram B (the big one)
 	static const GLfloat cube2[] =
 	{
 		//front face
-			//1st triangle
-			-2.5f,14.0f,5.0f, //1b
-			-2.5f,0.0f, 5.0f,//2b
-			2.5f, 14.0f,5.0f,//4b
-			//second triangle
-			-2.5f,0.0f, 5.0f,//2b
-			2.5f, 0.0f,5.0f,//3b
-			2.5f, 14.0f,5.0f,//4b
+		//1st triangle
+		-2.5f,14.0f,5.0f, //1b
+		-2.5f,0.0f, 5.0f,//2b
+		2.5f, 14.0f,5.0f,//4b
+		//second triangle
+		-2.5f,0.0f, 5.0f,//2b
+		2.5f, 0.0f,5.0f,//3b
+		2.5f, 14.0f,5.0f,//4b
 
 		//right face
-			//1st triangle
-			2.5f, 14.0f,5.0f,//4b
-			2.5f, 0.0f,5.0f,//3b
-			2.5f, 14.0f, 0.0f,//6b
-			//second triangle
-			2.5f, 0.0f,5.0f,//3b
-			2.5f, 14.0f, 0.0f,//6b
-			2.5f, 0.0f,0.0f,//5b
+		//1st triangle
+		2.5f, 14.0f,5.0f,//4b
+		2.5f, 0.0f,5.0f,//3b
+		2.5f, 14.0f, 0.0f,//6b
+		//second triangle
+		2.5f, 0.0f,5.0f,//3b
+		2.5f, 14.0f, 0.0f,//6b
+		2.5f, 0.0f,0.0f,//5b
 
 		//left face
-			//1st triangle
-			-2.5f,14.0f,5.0f, //1b
-			-2.5f,0.0f, 5.0f,//2b
-			-2.5f, 0.0f, 0.0f,//8b
-			//second triangle
-			-2.5f,14.0f,5.0f, //1b
-			-2.5f, 0.0f, 0.0f,//8b
-			-2.5f, 14.0f,0.0f,//7b
+		//1st triangle
+		-2.5f,14.0f,5.0f, //1b
+		-2.5f,0.0f, 5.0f,//2b
+		-2.5f, 0.0f, 0.0f,//8b
+		//second triangle
+		-2.5f,14.0f,5.0f, //1b
+		-2.5f, 0.0f, 0.0f,//8b
+		-2.5f, 14.0f,0.0f,//7b
 
 		//top face
-			//1st triangle
-			-2.5f,14.0f,5.0f, //1b
-			-2.5f, 14.0f,0.0f,//7b
-			2.5f, 14.0f, 0.0f,//6b
-			//second triangle
-			-2.5f,14.0f,5.0f, //1b
-			2.5f, 14.0f, 0.0f,//6b
-			2.5f, 14.0f,5.0f,//4b
+		//1st triangle
+		-2.5f,14.0f,5.0f, //1b
+		-2.5f, 14.0f,0.0f,//7b
+		2.5f, 14.0f, 0.0f,//6b
+		//second triangle
+		-2.5f,14.0f,5.0f, //1b
+		2.5f, 14.0f, 0.0f,//6b
+		2.5f, 14.0f,5.0f,//4b
 
 		//bot face
-			//1st triangle
-			-2.5f,0.0f, 5.0f,//2b
-			-2.5f, 0.0f, 0.0f,//8b
-			2.5f, 0.0f,0.0f,//5b
+		//1st triangle
+		-2.5f,0.0f, 5.0f,//2b
+		-2.5f, 0.0f, 0.0f,//8b
+		2.5f, 0.0f,0.0f,//5b
 
-			//second triangle
-			-2.5f,0.0f, 5.0f,//2b
-				2.5f, 0.0f,0.0f,//5b
-			2.5f, 0.0f,5.0f,//3b
-
-		//back face
-			//1st triangle
-			2.5f, 0.0f,0.0f,//5b
-			2.5f, 14.0f, 0.0f,//6b
-			-2.5f, 14.0f,0.0f,//7b
-			//second triangle
-			2.5f, 0.0f,0.0f,//5b
-			-2.5f, 14.0f,0.0f,//7b
-			-2.5f, 0.0f, 0.0f,//8b
-	};
-
-	/*
-	//for cube c (the small cube)
-	static const GLfloat cube3[] =
-	{
-		//front face
-			//1st triangle
-			-1.0f,-4.0f,-3.0f, //1c
-			1.0f,-4.0f, -3.0f,//2c
-			-1.0f, -6.0f,-3.0f,//3c
-			//second triangle
-			1.0f,-4.0f, -3.0f,//2c
-			-1.0f, -6.0f,-3.0f,//3c
-			1.0f, -6.0f,-3.0f,//4c
-
-		//right face
-			//1st triangle
-			1.0f,-4.0f, -3.0f,//2c
-			1.0f, -6.0f,-3.0f,//4c
-			1.0f, -4.0f, -5.0f,//6c
-			//second triangle
-			1.0f, -6.0f,-3.0f,//4c
-			1.0f, -4.0f, -5.0f,//6c
-			1.0f, -6.0f,-5.0f,//5c
-
-		//left face
-			//1st triangle
-			-1.0f,-4.0f,-3.0f, //1c
-			-1.0f, -6.0f,-3.0f,//3c
-			-1.0f, -6.0f, -5.0f,//8c
-			//second triangle
-			-1.0f,-4.0f,-3.0f, //1c
-			-1.0f, -6.0f, -5.0f,//8c
-			-1.0f, -4.0f,-5.0f,//7c
-
-		//top face
-			//1st triangle
-			-1.0f,-4.0f,-3.0f, //1c
-			1.0f,-4.0f, -3.0f,//2c
-			1.0f, -4.0f, -5.0f,//6c
-			//second triangle
-			-1.0f,-4.0f,-3.0f, //1c
-			1.0f, -4.0f, -5.0f,//6c
-			-1.0f, -4.0f,-5.0f,//7c
-
-		//bot face
-			//1st triangle
-			-1.0f, -6.0f,-3.0f,//3c
-			1.0f, -6.0f,-3.0f,//4c
-			-1.0f, -6.0f, -5.0f,//8c
-
-			//second triangle
-			1.0f, -6.0f,-3.0f,//4c
-			-1.0f, -6.0f, -5.0f,//8c
-			1.0f, -6.0f,-5.0f,//5c
+		//second triangle
+		-2.5f,0.0f, 5.0f,//2b
+		2.5f, 0.0f,0.0f,//5b
+		2.5f, 0.0f,5.0f,//3b
 
 		//back face
-			//1st triangle
-			1.0f, -4.0f, -5.0f,//6c
-			1.0f, -6.0f,-5.0f,//5c
-			-1.0f, -6.0f, -5.0f,//8c
-			//second triangle
-			1.0f, -4.0f, -5.0f,//6c
-			-1.0f, -4.0f,-5.0f,//7c
-			-1.0f, -6.0f, -5.0f,//8c
+		//1st triangle
+		2.5f, 0.0f,0.0f,//5b
+		2.5f, 14.0f, 0.0f,//6b
+		-2.5f, 14.0f,0.0f,//7b
+		//second triangle
+		2.5f, 0.0f,0.0f,//5b
+		-2.5f, 14.0f,0.0f,//7b
+		-2.5f, 0.0f, 0.0f,//8b
 	};
-	*/
 
 	GLfloat a = 1.0f;
-	GLfloat b = 1.0f;
 	static const GLfloat colorA[] = {
 		0.000f,  0.488f,  0.000f,a,
 		0.000f,  0.488f,  0.000f,a,
@@ -475,14 +390,14 @@ int main(void)
 		0.000f,  0.488f,  0.000f,a,
 		0.000f,  0.488f,  0.000f,a,
 		0.000f,  0.488f,  0.000f,a,
-			
+
 		1.000f,  0.000f,  0.000f,a,
 		1.000f,  0.000f,  0.000f,a,
 		1.000f,  0.000f,  0.000f,a,
 		1.000f,  0.000f,  0.000f,a,
 		1.000f,  0.000f,  0.000f,a,
 		1.000f,  0.000f,  0.000f,a,
-			
+
 		1.000f,  0.000f,  1.000f,a,
 		1.000f,  0.000f,  1.000f,a,
 		1.000f,  0.000f,  1.000f,a,
@@ -511,95 +426,7 @@ int main(void)
 		0.300f,  1.000f,  0.300f,a,
 		0.300f,  1.000f,  0.300f,a,
 	};
-	/*
-	static const GLfloat colorB[] = {
-		0.0f,  0.0f,  0.0f,b,
-		0.0f,  0.0f,  0.0f,b,
-		0.0f,  0.0f,  0.0f,b,
-		0.0f,  0.0f,  0.0f,b,
-		0.0f,  0.0f,  0.0f,b,
-		0.0f,  0.0f,  0.0f,b,
 
-		0.0f,  0.0f,  0.3f,b,
-		0.0f,  0.0f,  0.3f,b,
-		0.0f,  0.0f,  0.3f,b,
-		0.0f,  0.0f,  0.3f,b,
-		0.0f,  0.0f,  0.3f,b,
-		0.0f,  0.0f,  0.3f,b,
-
-		0.2f,  0.2f,  0.8f,b,
-		0.2f,  0.2f,  0.8f,b,
-		0.2f,  0.2f,  0.8f,b,
-		0.2f,  0.2f,  0.8f,b,
-		0.2f,  0.2f,  0.8f,b,
-		0.2f,  0.2f,  0.8f,b,
-
-		0.000f,  0.000f,  0.600f,b,
-		0.000f,  0.000f,  0.600f,b,
-		0.000f,  0.000f,  0.600f,b,
-		0.000f,  0.000f,  0.600f,b,
-		0.000f,  0.000f,  0.600f,b,
-		0.000f,  0.000f,  0.600f,b,
-
-		0.300f,  0.300f,  0.600f,b,
-		0.300f,  0.300f,  0.600f,b,
-		0.300f,  0.300f,  0.600f,b,
-		0.300f,  0.300f,  0.600f,b,
-		0.300f,  0.300f,  0.600f,b,
-		0.300f,  0.300f,  0.600f,b,
-
-		0.500f,  0.500f,  0.900f,b,
-		0.500f,  0.500f,  0.900f,b,
-		0.500f,  0.500f,  0.900f,b,
-		0.500f,  0.500f,  0.900f,b,
-		0.500f,  0.500f,  0.900f,b,
-		0.500f,  0.500f,  0.900f,b,
-	};
-
-	static const GLfloat colorC[] = {
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-		1.0f,  1.0f,  1.0f,b,
-	};
-	*/
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
@@ -609,34 +436,11 @@ int main(void)
 	glGenBuffers(1, &vertexbuffer2);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer2);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(cube2), cube2, GL_STATIC_DRAW);
-	
-	/*
-	* For the small cube
-	* 
-	GLuint vertexbuffer3;
-	glGenBuffers(1, &vertexbuffer3);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer3);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(cube3), cube3, GL_STATIC_DRAW);
-	*/
 
 	GLuint colorbufferA;
 	glGenBuffers(1, &colorbufferA);
 	glBindBuffer(GL_ARRAY_BUFFER, colorbufferA);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(colorA), colorA, GL_STATIC_DRAW);
-	/*
-	GLuint colorbufferB;
-	glGenBuffers(1, &colorbufferB);
-	glBindBuffer(GL_ARRAY_BUFFER, colorbufferB);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(colorB), colorB, GL_STATIC_DRAW);
-	*/
-	/*
-	* For the small cube
-	 
-	GLuint colorbufferC;
-	glGenBuffers(1, &colorbufferC);
-	glBindBuffer(GL_ARRAY_BUFFER, colorbufferC);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(colorC), colorC, GL_STATIC_DRAW);
-	*/
 
 	double currentTime = glfwGetTime();
 
@@ -645,11 +449,9 @@ int main(void)
 	do {
 
 		// per-frame time logic
-		// --------------------
 		float currentFrame = static_cast<float>(glfwGetTime());
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
-
 
 		// Compute the MVP matrix from keyboard input
 		camera_function();
@@ -665,76 +467,37 @@ int main(void)
 
 
 
-		//ProjectionMatrix = glm::perspective(glm::radians(45.0f), 4.0f / 4.0f, 0.1f, 100.0f);
 		// Camera matrix
-		//ViewMatrix = glm::lookAt(cameraPos, cameraFront, cameraUp);
 		glm::mat4 Model = glm::mat4(1.0f);
 		glm::mat4 MVP = ProjectionMatrix * ViewMatrix * Model;
 
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
-		/*
-		* Get keys for scaling
-		* Multiply by delta time to limit fps and make sure it changes at normal speed
-		*/
+
+		// Get keys for scaling
+		// Multiply by delta time to limit fps and make sure it changes at normal speed
 		// change scale x up with u key down with p key
 		if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS) {
-			//deltaTime = float(glfwGetTime() - currentTime);
 			scalex += 2 * 2.0f * deltaTime;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
-			//deltaTime = float(glfwGetTime() - currentTime);
 			scalex -= 2 * 2.0f * deltaTime;
 		}
 		//change scale y up with i key down with o key
 		if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
-			//deltaTime = float(glfwGetTime() - currentTime);
 			scaley += 2 * 2.0f * deltaTime;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) {
-			//deltaTime = float(glfwGetTime() - currentTime);
 			scaley -= 2 * 2.0f * deltaTime;
 		}
 
 		//change scale z up with j key down with k key
 		if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
-			//deltaTime = float(glfwGetTime() - currentTime);
 			scalez += 2 * 2.0f * deltaTime;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
-			//deltaTime = float(glfwGetTime() - currentTime);
 			scalez -= 2 * 2.0f * deltaTime;
 		}
-
-		/*
-		* draw C cube
-		* 1st attribute buffer : vertices
-		* 
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer3);
-		glVertexAttribPointer(
-			0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-			3,                  // size
-			GL_FLOAT,           // type
-			GL_FALSE,           // normalized?
-			0,                  // stride
-			(void*)0            // array buffer offset
-		);
-		*/
-
-		/*
-		// 2nd attribute buffer : colors
-		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, colorbufferC);
-		glVertexAttribPointer(
-			1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-			4,                                // size
-			GL_FLOAT,                         // type
-			GL_FALSE,                         // normalized?
-			0,                                // stride
-			(void*)0                          // array buffer offset
-		);
-		*/
 
 		// Draw the triangle !
 		glDrawArrays(GL_TRIANGLES, 0, 36); // 3 indices starting at 0 -> 1 triangle
