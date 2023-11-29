@@ -255,7 +255,7 @@ int main(void) {
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 
 	//for parallelogram A (the small one)
-	static const GLfloat cube1[] = {
+	static const GLfloat obj1[] = {
 		//front face
 		//1st triangle
 		-5.0f,-2.5f,5.0f, //1
@@ -318,7 +318,7 @@ int main(void) {
 	};
 
 	//for parallelogram B (the big one)
-	static const GLfloat cube2[] =
+	static const GLfloat obj2[] =
 	{
 		//front face
 		//1st triangle
@@ -430,12 +430,12 @@ int main(void) {
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(cube1), cube1, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(obj1), obj1, GL_STATIC_DRAW);
 
 	GLuint vertexbuffer2;
 	glGenBuffers(1, &vertexbuffer2);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer2);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(cube2), cube2, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(obj2), obj2, GL_STATIC_DRAW);
 
 	GLuint colorbufferA;
 	glGenBuffers(1, &colorbufferA);
