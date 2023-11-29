@@ -1,12 +1,15 @@
 ﻿//********************************
+// 2023
 //Αυτό το αρχείο θα το χρησιμοποιήσετε
-// για να υλοποιήσετε την άσκηση 1B της OpenGL
+// για να υλοποιήσετε την άσκηση 1C της OpenGL
 //
 //ΑΜ:4628                         Όνομα:Άγγελος Ανδρέου
 //ΑΜ:4359                         Όνομα:Δημοσθένης Ζάγκας
 
 //*********************************
+#define _CRT_SECURE_NO_WARNINGS
 
+#define STB_IMAGE_IMPLEMENTATION
 // Include standard headers
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,7 +19,7 @@
 #include <fstream>
 #include <algorithm>
 #include <sstream>
-
+#include "stb_image.h"
 
 
 // Include GLEW
@@ -44,66 +47,9 @@ glm::mat4 getProjectionMatrix() {
 	return ProjectionMatrix;
 }
 
-// Camera definition
-// Where the camera is located
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 40.0f);
-// Where the camera is looking
-glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 2.5f);
-// Which side if "up" for the camera in 3d space
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-// View direction is a vector that starts at the camera target and points towards the camera position
-glm::vec3 viewDirection = cameraPos - cameraTarget;
-
-// timing
-float deltaTime = 0.0f;	// time between current frame and last frame
-float lastFrame = 0.0f;
-
-void camera_function() {
-	// Compute time difference between current and last frame
-	// camera speed
-	// float speed = static_cast <float> (20.0f * deltaTime);
-	float cameraSpeed = (3.0f * deltaTime);
-
-	float FoV = 45.0f;
-
-	// Move camera around x (Up)
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraSpeed, glm::vec3(1.0f, 0.0f, 0.0f));
-		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
-		cameraUp = glm::vec3(rotationMatrix * glm::vec4(cameraUp, 0.0f));
-	}
-	// Move camera around x (Down)
-	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
-		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraSpeed, glm::vec3(-1.0f, 0.0f, 0.0f));
-		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
-		cameraUp = glm::vec3(rotationMatrix * glm::vec4(cameraUp, 0.0f));
-	}
-	// move camera AROUND y (Right)
-	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraSpeed, glm::vec3(0.0f, 1.0f, 0.0f));
-		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
-		cameraUp = glm::vec3(rotationMatrix * glm::vec4(cameraUp, 0.0f));
-	}
-	// move camera AROUND y (Left)
-	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
-		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraSpeed, glm::vec3(0.0f, -1.0f, 0.0f));
-		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
-		cameraUp = glm::vec3(rotationMatrix * glm::vec4(cameraUp, 0.0f));
-	}
-	// move camera BACK
-	if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS) {
-		cameraPos += cameraPos * (cameraSpeed);
-	}
-	// move camera FRONT
-	if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS) {
-		cameraPos -= cameraPos * (cameraSpeed);
-	}
-
-	ProjectionMatrix = glm::perspective(glm::radians(FoV), 4.0f / 4.0f, 0.1f, 100.0f);
-
-	ViewMatrix = glm::lookAt(cameraPos, cameraTarget, cameraUp);
-}
-
+//************************************
+// Η LoadShaders είναι black box για σας
+//************************************
 
 GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path) {
 
@@ -200,6 +146,70 @@ GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path)
 	return ProgramID;
 }
 
+///****************************************************************
+//  Εδω θα υλοποιήσετε την συνάρτηση της κάμερας
+//****************************************************************
+// Camera definition
+// Where the camera is located
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 40.0f);
+// Where the camera is looking
+glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 2.5f);
+// Which side if "up" for the camera in 3d space
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+// View direction is a vector that starts at the camera target and points towards the camera position
+glm::vec3 viewDirection = cameraPos - cameraTarget;
+
+// timing
+float deltaTime = 0.0f;	// time between current frame and last frame
+float lastFrame = 0.0f;
+
+void camera_function() {
+	// Compute time difference between current and last frame
+	// camera speed
+	// float speed = static_cast <float> (20.0f * deltaTime);
+	float cameraSpeed = (3.0f * deltaTime);
+
+	float FoV = 45.0f;
+
+	// Move camera around x (Up)
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraSpeed, glm::vec3(1.0f, 0.0f, 0.0f));
+		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		cameraUp = glm::vec3(rotationMatrix * glm::vec4(cameraUp, 0.0f));
+	}
+	// Move camera around x (Down)
+	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
+		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraSpeed, glm::vec3(-1.0f, 0.0f, 0.0f));
+		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		cameraUp = glm::vec3(rotationMatrix * glm::vec4(cameraUp, 0.0f));
+	}
+	// move camera AROUND y (Right)
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraSpeed, glm::vec3(0.0f, 1.0f, 0.0f));
+		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		cameraUp = glm::vec3(rotationMatrix * glm::vec4(cameraUp, 0.0f));
+	}
+	// move camera AROUND y (Left)
+	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
+		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraSpeed, glm::vec3(0.0f, -1.0f, 0.0f));
+		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		cameraUp = glm::vec3(rotationMatrix * glm::vec4(cameraUp, 0.0f));
+	}
+	// move camera BACK
+	if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS) {
+		cameraPos += cameraPos * (cameraSpeed);
+	}
+	// move camera FRONT
+	if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS) {
+		cameraPos -= cameraPos * (cameraSpeed);
+	}
+
+	ProjectionMatrix = glm::perspective(glm::radians(FoV), 4.0f / 4.0f, 0.1f, 100.0f);
+
+	ViewMatrix = glm::lookAt(cameraPos, cameraTarget, cameraUp);
+}
+
+
 int main(void) {
 	// Initialise GLFW
 	if (!glfwInit()) {
@@ -211,7 +221,7 @@ int main(void) {
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Open a window and create its OpenGL context
@@ -254,7 +264,23 @@ int main(void) {
 	GLuint programID = LoadShaders("P1C.vertexshader", "P1C.fragmentshader");
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 
+	//////////////////////////////////////////////////////
+	// Load the textures here
+	// 
+	// Create one OpenGL texture
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+
+	// Create second OpenGL texture
+
+	//glGenTextures(2, &textureID);
+
+	// "Bind" the newly created texture : all future texture functions will modify this texture
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	/////////////////////////////////////////////////////
+	// 
 	//for parallelogram A (the small one)
+
 	static const GLfloat obj1[] = {
 		//front face
 		//1st triangle
@@ -442,7 +468,7 @@ int main(void) {
 	glBindBuffer(GL_ARRAY_BUFFER, colorbufferA);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(colorA), colorA, GL_STATIC_DRAW);
 
-	double currentTime = glfwGetTime();
+	//double currentTime = glfwGetTime();
 
 	//float for scaling
 	float scalex = 1.0f, scaley = 1.0f, scalez = 1.0f;
