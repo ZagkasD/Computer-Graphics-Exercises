@@ -61,7 +61,7 @@ float lastFrame = 0.0f;
 void camera_function() {
 	// Compute time difference between current and last frame
 	// camera speed
-	float cameraSpeed = (3.0f * deltaTime) *2;
+	float cameraSpeed = (3.0f * deltaTime);
 
 	float FoV = 45.0f;
 
