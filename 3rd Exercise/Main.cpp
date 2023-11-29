@@ -61,33 +61,48 @@ float lastFrame = 0.0f;
 void camera_function() {
 	// Compute time difference between current and last frame
 	// camera speed
-	// float speed = static_cast <float> (20.0f * deltaTime);
 	float cameraSpeed = (3.0f * deltaTime);
 
 	float FoV = 45.0f;
 
+	/*
+	* For rotation:
+	* rotationMatrix: takes an identity matrix, the camera speed and the axis for rotation
+	* cameraPos: multiply rotation matrix with cameraPos
+	* We could also subtract the cameraTarget before the rotation and add it after, in order
+	* to rotate the camera around the viewTarget instead of the origin.
+	* rotationMatrix is 4x4 matrix. Need to make cameraPos a 4x4 for the multiplication
+	* Need to rotate the camera up to change which direction is up when rotating
+	* This is necessary even when rotatin around y axis, because we might try to rotate
+	* around x and y simultaneously. 
+	*/
+
 	// Move camera around x (Up)
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraSpeed, glm::vec3(1.0f, 0.0f, 0.0f));
-		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		//cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos, 1.0f));
 		cameraUp = glm::vec3(rotationMatrix * glm::vec4(cameraUp, 0.0f));
 	}
 	// Move camera around x (Down)
 	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
 		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraSpeed, glm::vec3(-1.0f, 0.0f, 0.0f));
-		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		//cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos, 1.0f));
 		cameraUp = glm::vec3(rotationMatrix * glm::vec4(cameraUp, 0.0f));
 	}
 	// move camera AROUND y (Right)
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
 		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraSpeed, glm::vec3(0.0f, 1.0f, 0.0f));
-		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		//cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos, 1.0f));
 		cameraUp = glm::vec3(rotationMatrix * glm::vec4(cameraUp, 0.0f));
 	}
 	// move camera AROUND y (Left)
 	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
 		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraSpeed, glm::vec3(0.0f, -1.0f, 0.0f));
-		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		//cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos, 1.0f));
 		cameraUp = glm::vec3(rotationMatrix * glm::vec4(cameraUp, 0.0f));
 	}
 	// move camera BACK
@@ -255,7 +270,7 @@ int main(void) {
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 
 	//for parallelogram A (the small one)
-	static const GLfloat cube1[] = {
+	static const GLfloat objA[] = {
 		//front face
 		//1st triangle
 		-5.0f,-2.5f,5.0f, //1
@@ -318,7 +333,7 @@ int main(void) {
 	};
 
 	//for parallelogram B (the big one)
-	static const GLfloat cube2[] =
+	static const GLfloat objB[] =
 	{
 		//front face
 		//1st triangle
@@ -383,7 +398,7 @@ int main(void) {
 	};
 
 	GLfloat a = 1.0f;
-	static const GLfloat colorA[] = {
+	static const GLfloat objColor[] = {
 		0.000f,  0.488f,  0.000f,a,
 		0.000f,  0.488f,  0.000f,a,
 		0.000f,  0.488f,  0.000f,a,
@@ -427,20 +442,20 @@ int main(void) {
 		0.300f,  1.000f,  0.300f,a,
 	};
 
-	GLuint vertexbuffer;
-	glGenBuffers(1, &vertexbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(cube1), cube1, GL_STATIC_DRAW);
+	GLuint vertexbufferA;
+	glGenBuffers(1, &vertexbufferA);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbufferA);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(objA), objA, GL_STATIC_DRAW);
 
-	GLuint vertexbuffer2;
-	glGenBuffers(1, &vertexbuffer2);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer2);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(cube2), cube2, GL_STATIC_DRAW);
+	GLuint vertexbufferB;
+	glGenBuffers(1, &vertexbufferB);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbufferB);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(objB), objB, GL_STATIC_DRAW);
 
 	GLuint colorbufferA;
 	glGenBuffers(1, &colorbufferA);
 	glBindBuffer(GL_ARRAY_BUFFER, colorbufferA);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(colorA), colorA, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(objColor), objColor, GL_STATIC_DRAW);
 
 	double currentTime = glfwGetTime();
 
@@ -513,7 +528,7 @@ int main(void) {
 		// draw A cube
 		// 1st attribute buffer : vertices
 		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferA);
 		glVertexAttribPointer(
 			0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
 			3,                  // size
@@ -544,7 +559,7 @@ int main(void) {
 		// draw B cube
 		// 1rst attribute buffer : vertices
 		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer2);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferB);
 		glVertexAttribPointer(
 			0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
 			3,                  // size
@@ -583,7 +598,7 @@ int main(void) {
 		glfwWindowShouldClose(window) == 0);
 
 	// Cleanup VBO
-	glDeleteBuffers(1, &vertexbuffer);
+	glDeleteBuffers(1, &vertexbufferA);
 	glDeleteVertexArrays(1, &VertexArrayID);
 	glDeleteProgram(programID);
 
