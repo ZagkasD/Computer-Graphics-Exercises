@@ -61,33 +61,48 @@ float lastFrame = 0.0f;
 void camera_function() {
 	// Compute time difference between current and last frame
 	// camera speed
-	// float speed = static_cast <float> (20.0f * deltaTime);
-	float cameraSpeed = (3.0f * deltaTime);
+	float cameraSpeed = (3.0f * deltaTime) *2;
 
 	float FoV = 45.0f;
+
+	/*
+	* For rotation:
+	* rotationMatrix: takes an identity matrix, the camera speed and the axis for rotation
+	* cameraPos: multiply rotation matrix with cameraPos
+	* We could also subtract the cameraTarget before the rotation and add it after, in order
+	* to rotate the camera around the viewTarget instead of the origin.
+	* rotationMatrix is 4x4 matrix. Need to make cameraPos a 4x4 for the multiplication
+	* Need to rotate the camera up to change which direction is up when rotating
+	* This is necessary even when rotatin around y axis, because we might try to rotate
+	* around x and y simultaneously. 
+	*/
 
 	// Move camera around x (Up)
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraSpeed, glm::vec3(1.0f, 0.0f, 0.0f));
-		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		//cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos, 1.0f));
 		cameraUp = glm::vec3(rotationMatrix * glm::vec4(cameraUp, 0.0f));
 	}
 	// Move camera around x (Down)
 	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
 		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraSpeed, glm::vec3(-1.0f, 0.0f, 0.0f));
-		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		//cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos, 1.0f));
 		cameraUp = glm::vec3(rotationMatrix * glm::vec4(cameraUp, 0.0f));
 	}
 	// move camera AROUND y (Right)
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
 		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraSpeed, glm::vec3(0.0f, 1.0f, 0.0f));
-		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		//cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos, 1.0f));
 		cameraUp = glm::vec3(rotationMatrix * glm::vec4(cameraUp, 0.0f));
 	}
 	// move camera AROUND y (Left)
 	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
 		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), cameraSpeed, glm::vec3(0.0f, -1.0f, 0.0f));
-		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		//cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos - cameraTarget, 1.0f)) + cameraTarget;
+		cameraPos = glm::vec3(rotationMatrix * glm::vec4(cameraPos, 1.0f));
 		cameraUp = glm::vec3(rotationMatrix * glm::vec4(cameraUp, 0.0f));
 	}
 	// move camera BACK
