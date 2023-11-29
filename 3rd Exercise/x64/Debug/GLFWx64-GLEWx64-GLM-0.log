@@ -1,3 +1,0 @@
-﻿  Main.cpp
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-  GLFWx64-GLEWx64-GLM-0.vcxproj -> C:\Users\Zagkas\OneDrive - ΠΑΝΕΠΙΣΤΗΜΙΟ ΙΩΑΝΝΙΝΩΝ\School\6th Year\11th Semester\Computer-Graphics-Exercises\3rd Exercise\x64\Debug\GLFWx64-GLEWx64-GLM-0.exe
