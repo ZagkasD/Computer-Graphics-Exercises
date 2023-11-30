@@ -270,7 +270,7 @@ int main(void) {
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 
 	//for parallelogram A (the small one)
-	static const GLfloat cube1[] = {
+	static const GLfloat objA[] = {
 		//front face
 		//1st triangle
 		-5.0f,-2.5f,5.0f, //1
@@ -333,7 +333,7 @@ int main(void) {
 	};
 
 	//for parallelogram B (the big one)
-	static const GLfloat cube2[] =
+	static const GLfloat objB[] =
 	{
 		//front face
 		//1st triangle
@@ -398,7 +398,7 @@ int main(void) {
 	};
 
 	GLfloat a = 1.0f;
-	static const GLfloat colorA[] = {
+	static const GLfloat objColor[] = {
 		0.000f,  0.488f,  0.000f,a,
 		0.000f,  0.488f,  0.000f,a,
 		0.000f,  0.488f,  0.000f,a,
@@ -442,20 +442,20 @@ int main(void) {
 		0.300f,  1.000f,  0.300f,a,
 	};
 
-	GLuint vertexbuffer;
-	glGenBuffers(1, &vertexbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(cube1), cube1, GL_STATIC_DRAW);
+	GLuint vertexbufferA;
+	glGenBuffers(1, &vertexbufferA);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbufferA);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(objA), objA, GL_STATIC_DRAW);
 
-	GLuint vertexbuffer2;
-	glGenBuffers(1, &vertexbuffer2);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer2);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(cube2), cube2, GL_STATIC_DRAW);
+	GLuint vertexbufferB;
+	glGenBuffers(1, &vertexbufferB);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbufferB);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(objB), objB, GL_STATIC_DRAW);
 
 	GLuint colorbufferA;
 	glGenBuffers(1, &colorbufferA);
 	glBindBuffer(GL_ARRAY_BUFFER, colorbufferA);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(colorA), colorA, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(objColor), objColor, GL_STATIC_DRAW);
 
 	double currentTime = glfwGetTime();
 
@@ -528,7 +528,7 @@ int main(void) {
 		// draw A cube
 		// 1st attribute buffer : vertices
 		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferA);
 		glVertexAttribPointer(
 			0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
 			3,                  // size
@@ -559,7 +559,7 @@ int main(void) {
 		// draw B cube
 		// 1rst attribute buffer : vertices
 		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer2);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferB);
 		glVertexAttribPointer(
 			0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
 			3,                  // size
@@ -598,7 +598,7 @@ int main(void) {
 		glfwWindowShouldClose(window) == 0);
 
 	// Cleanup VBO
-	glDeleteBuffers(1, &vertexbuffer);
+	glDeleteBuffers(1, &vertexbufferA);
 	glDeleteVertexArrays(1, &VertexArrayID);
 	glDeleteProgram(programID);
 
