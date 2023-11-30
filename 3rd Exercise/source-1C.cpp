@@ -216,6 +216,36 @@ void camera_function() {
 	ViewMatrix = glm::lookAt(cameraPos, cameraTarget, cameraUp);
 }
 
+//float for scaling
+float scalex = 1.0f, scaley = 1.0f, scalez = 1.0f;
+
+void scaling() {
+	// Get keys for scaling
+	// Multiply by delta time to limit fps and make sure it changes at normal speed
+	// change scale x up with u key down with p key
+	if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS) {
+		scalex += 2 * 2.0f * deltaTime;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
+		scalex -= 2 * 2.0f * deltaTime;
+	}
+	//change scale y up with i key down with o key
+	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
+		scaley += 2 * 2.0f * deltaTime;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) {
+		scaley -= 2 * 2.0f * deltaTime;
+	}
+
+	//change scale z up with j key down with k key
+	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
+		scalez += 2 * 2.0f * deltaTime;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
+		scalez -= 2 * 2.0f * deltaTime;
+	}
+
+}
 
 int main(void) {
 	// Initialise GLFW
@@ -274,15 +304,17 @@ int main(void) {
 	// Load the textures here
 	// 
 	// Create one OpenGL texture
-	GLuint textureID;
-	glGenTextures(1, &textureID);
+	GLuint textureIDA;
+	glGenTextures(1, &textureIDA);
+	// "Bind" the newly created texture : all future texture functions will modify this texture
+	glBindTexture(GL_TEXTURE_2D, textureIDA);
 
 	// Create second OpenGL texture
-
-	//glGenTextures(2, &textureID);
-
+	GLuint textureIDB;
+	glGenTextures(2, &textureIDB);
 	// "Bind" the newly created texture : all future texture functions will modify this texture
-	glBindTexture(GL_TEXTURE_2D, textureID);
+	glBindTexture(GL_TEXTURE_2D, textureIDA);
+
 	
 	//for parallelogram A (the small one)
 	static const GLfloat objA[] = {
@@ -457,10 +489,55 @@ int main(void) {
 		0.300f,  1.000f,  0.300f,a,
 	};
 
+	// 36 uv coord sets
+	static const GLfloat g_uv_buffer_data_A[] = {
+		0.000059f, 1.0f - 0.000004f,
+		0.000103f, 1.0f - 0.336048f,
+		0.335973f, 1.0f - 0.335903f,
+		1.000023f, 1.0f - 0.000013f,
+		0.667979f, 1.0f - 0.335851f,
+		0.999958f, 1.0f - 0.336064f,
+		0.667979f, 1.0f - 0.335851f,
+		0.336024f, 1.0f - 0.671877f,
+		0.667969f, 1.0f - 0.671889f,
+		1.000023f, 1.0f - 0.000013f,
+		0.668104f, 1.0f - 0.000013f,
+		0.667979f, 1.0f - 0.335851f,
+		0.000059f, 1.0f - 0.000004f,
+		0.335973f, 1.0f - 0.335903f,
+		0.336098f, 1.0f - 0.000071f,
+		0.667979f, 1.0f - 0.335851f,
+		0.335973f, 1.0f - 0.335903f,
+		0.336024f, 1.0f - 0.671877f,
+		1.000004f, 1.0f - 0.671847f,
+		0.999958f, 1.0f - 0.336064f,
+		0.667979f, 1.0f - 0.335851f,
+		0.668104f, 1.0f - 0.000013f,
+		0.335973f, 1.0f - 0.335903f,
+		0.667979f, 1.0f - 0.335851f,
+		0.335973f, 1.0f - 0.335903f,
+		0.668104f, 1.0f - 0.000013f,
+		0.336098f, 1.0f - 0.000071f,
+		0.000103f, 1.0f - 0.336048f,
+		0.000004f, 1.0f - 0.671870f,
+		0.336024f, 1.0f - 0.671877f,
+		0.000103f, 1.0f - 0.336048f,
+		0.336024f, 1.0f - 0.671877f,
+		0.335973f, 1.0f - 0.335903f,
+		0.667969f, 1.0f - 0.671889f,
+		1.000004f, 1.0f - 0.671847f,
+		0.667979f, 1.0f - 0.335851f
+	};
+
 	GLuint vertexbufferA;
 	glGenBuffers(1, &vertexbufferA);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbufferA);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(objA), objA, GL_STATIC_DRAW);
+
+	GLuint uvbuffer;
+	glGenBuffers(1, &uvbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data_A), g_uv_buffer_data_A, GL_STATIC_DRAW);
 
 	GLuint vertexbufferB;
 	glGenBuffers(1, &vertexbufferB);
@@ -474,8 +551,7 @@ int main(void) {
 
 	double currentTime = glfwGetTime();
 
-	//float for scaling
-	float scalex = 1.0f, scaley = 1.0f, scalez = 1.0f;
+
 	do {
 
 		// per-frame time logic
@@ -503,31 +579,7 @@ int main(void) {
 
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
-
-		// Get keys for scaling
-		// Multiply by delta time to limit fps and make sure it changes at normal speed
-		// change scale x up with u key down with p key
-		if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS) {
-			scalex += 2 * 2.0f * deltaTime;
-		}
-		else if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
-			scalex -= 2 * 2.0f * deltaTime;
-		}
-		//change scale y up with i key down with o key
-		if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
-			scaley += 2 * 2.0f * deltaTime;
-		}
-		else if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) {
-			scaley -= 2 * 2.0f * deltaTime;
-		}
-
-		//change scale z up with j key down with k key
-		if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
-			scalez += 2 * 2.0f * deltaTime;
-		}
-		else if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
-			scalez -= 2 * 2.0f * deltaTime;
-		}
+		scaling();
 
 		// Draw the triangle !
 		glDrawArrays(GL_TRIANGLES, 0, 36); // 3 indices starting at 0 -> 1 triangle
@@ -540,7 +592,7 @@ int main(void) {
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
 
-		// draw A cube
+		// draw object A
 		// 1st attribute buffer : vertices
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferA);
@@ -570,8 +622,7 @@ int main(void) {
 		glDrawArrays(GL_TRIANGLES, 0, 36); // 3 indices starting at 0 -> 1 triangle
 
 
-
-		// draw B cube
+		// draw obj B
 		// 1rst attribute buffer : vertices
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbufferB);
