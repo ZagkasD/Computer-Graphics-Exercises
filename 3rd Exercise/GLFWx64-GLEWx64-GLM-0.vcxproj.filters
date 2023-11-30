@@ -19,4 +19,25 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\Downloads\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="texture-model-Α.jpg">
+      <Filter>Source Files</Filter>
+    </Image>
+    <Image Include="texture-model-Β.jpg">
+      <Filter>Source Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="P1C.fragmentshader">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="P1C.vertexshader">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

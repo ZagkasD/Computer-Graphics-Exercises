@@ -7,6 +7,7 @@
 
 //*********************************
 #define _CRT_SECURE_NO_WARNINGS
+// For loading image data using function stbi_load
 #define STB_IMAGE_IMPLEMENTATION
 
 // Include standard headers
@@ -18,6 +19,7 @@
 #include <fstream>
 #include <algorithm>
 #include <sstream>
+// For loading image data using function stbi_load
 #include "stb_image.h"
 
 
@@ -302,19 +304,36 @@ int main(void) {
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 
 	// Load the textures here
-	// 
+	int width;
+	int height;
+	int channels;
+	unsigned char* image_data_A = stbi_load("texture-model-Α.jpg", &width, &height, &channels, 0);
+	if (!image_data_A) {
+		fprintf(stderr, "Error loading image: %s\n", stbi_failure_reason());
+		return -1;
+	}
+	printf("width of texture_modeL_A.jpg = %d\n", width);
+
 	// Create one OpenGL texture
-	GLuint textureIDA;
-	glGenTextures(1, &textureIDA);
+	GLuint textureID_A;
+	glGenTextures(1, &textureID_A);
 	// "Bind" the newly created texture : all future texture functions will modify this texture
-	glBindTexture(GL_TEXTURE_2D, textureIDA);
+	glBindTexture(GL_TEXTURE_2D, textureID_A);
+	// Give the image to OpenGL
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image_data_A);
+	// Using GL_NEAREST will result is low quality texture
+	// Use GL_LINEAR or anisotropic filtering for better quality
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	stbi_image_free(image_data_A);
 
+	/*
 	// Create second OpenGL texture
-	GLuint textureIDB;
-	glGenTextures(2, &textureIDB);
+	GLuint textureID_B;
+	glGenTextures(2, &textureID_B);
 	// "Bind" the newly created texture : all future texture functions will modify this texture
-	glBindTexture(GL_TEXTURE_2D, textureIDA);
-
+	glBindTexture(GL_TEXTURE_2D, textureID_B);
+	*/
 	
 	//for parallelogram A (the small one)
 	static const GLfloat objA[] = {
@@ -489,7 +508,7 @@ int main(void) {
 		0.300f,  1.000f,  0.300f,a,
 	};
 
-	// 36 uv coord sets
+	// 36 uv coord sets for a parallelogram
 	static const GLfloat g_uv_buffer_data_A[] = {
 		0.000059f, 1.0f - 0.000004f,
 		0.000103f, 1.0f - 0.336048f,
@@ -571,7 +590,10 @@ int main(void) {
 		// Use our shader
 		glUseProgram(programID);
 
-
+		// Bind our texture in the Texture Unit 0
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, textureID_A);
+		glUniform1i(textureID_A, 0);
 
 		// Camera matrix
 		glm::mat4 Model = glm::mat4(1.0f);
@@ -579,12 +601,13 @@ int main(void) {
 
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
+		// Call scaling function
 		scaling();
 
 		// Draw the triangle !
 		glDrawArrays(GL_TRIANGLES, 0, 36); // 3 indices starting at 0 -> 1 triangle
 
-		// TRANSFORMATION
+		// Transformation
 		glm::mat4 myScalingMatrix = glm::scale(glm::vec3(scalex, scaley, scalez));
 
 		MVP = ProjectionMatrix * ViewMatrix * myScalingMatrix;
@@ -606,12 +629,12 @@ int main(void) {
 		);
 
 
-		// 2nd attribute buffer : colors
+		// 2nd attribute buffer : UV
 		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, colorbufferA);
+		glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
 		glVertexAttribPointer(
 			1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-			4,                                // size
+			2,                                // size
 			GL_FLOAT,                         // type
 			GL_FALSE,                         // normalized?
 			0,                                // stride
@@ -635,22 +658,24 @@ int main(void) {
 			(void*)0            // array buffer offset
 		);
 
-		// 2nd attribute buffer : colors
+		/*
+		// 2nd attribute buffer : UV
 		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, colorbufferA);
+		glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
 		glVertexAttribPointer(
 			1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-			4,                                // size
+			2,                                // size
 			GL_FLOAT,                         // type
 			GL_FALSE,                         // normalized?
 			0,                                // stride
 			(void*)0                          // array buffer offset
 		);
+		*/
 
 		// Draw the triangle !
 		glDrawArrays(GL_TRIANGLES, 0, 36); // 3 indices starting at 0 -> 1 triangle
 
-		// transformation
+		// Transformation
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 

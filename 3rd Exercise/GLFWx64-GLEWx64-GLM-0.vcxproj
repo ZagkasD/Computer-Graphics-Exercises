@@ -21,6 +21,17 @@
   <ItemGroup>
     <ClCompile Include="source-1C.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\Downloads\stb_image.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="texture-model-Α.jpg" />
+    <Image Include="texture-model-Β.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="P1C.fragmentshader" />
+    <None Include="P1C.vertexshader" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
